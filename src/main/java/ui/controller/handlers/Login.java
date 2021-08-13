@@ -1,0 +1,32 @@
+package ui.controller.handlers;
+
+
+import domain.model.User;
+import ui.controller.RequestHandler;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+
+public class Login extends RequestHandler {
+
+    @Override
+    public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String destination = "index.jsp";
+
+        String mail = request.getParameter("mail");
+        String password = request.getParameter("loginpass");
+
+        User user = getService().CorrectLogin(mail, password);
+        createSession(user, request, response);
+
+        request.getRequestDispatcher(destination).forward(request, response);
+    }
+
+    private void createSession(User user, HttpServletRequest request, HttpServletResponse response){
+        HttpSession session = request.getSession();
+        session.setAttribute("user", user);
+    }
+}
